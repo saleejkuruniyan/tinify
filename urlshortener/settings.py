@@ -66,6 +66,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "urlshortener.urls"
 
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '10/min',  # Limit for anonymous users (based on IP)
+    }
+}
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

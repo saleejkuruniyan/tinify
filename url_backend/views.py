@@ -3,13 +3,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.validators import URLValidator
+from rest_framework.throttling import AnonRateThrottle
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
 from django.conf import settings
 from .models import URL
 
 
+class URLShortenRateThrottle(AnonRateThrottle):
+    rate = '10/min'
+
+
 class ShortenURLAPIView(APIView):
+    throttle_classes = [URLShortenRateThrottle]
+
     def post(self, request):
         long_url = request.data.get('long_url')
 

@@ -36,12 +36,17 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ long_url: longUrl })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.short_url) {
+            .then(async (response) => {
+                const data = await response.json();
+
+                if (response.status === 429) {
+                    resultDiv.innerHTML = `<p style='color:red;'>${data.detail}</p>`;
+                } else if (response.ok && data.short_url) {
                     resultDiv.innerHTML = `<p>Short URL: <a href="${data.short_url}" target="_blank">${data.short_url}</a></p>`;
                 } else if (data.error) {
                     resultDiv.innerHTML = `<p style='color:red;'>${data.error}</p>`;
+                } else {
+                    resultDiv.innerHTML = "<p style='color:red;'>An unexpected error occurred.</p>";
                 }
             })
             .catch(() => {

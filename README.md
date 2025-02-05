@@ -7,6 +7,7 @@ A simple Django REST Framework-based URL shortener API that allows users to shor
 - Redirect to the original URL using the short code
 - Prevents duplicate short codes for the same URL
 - Validates the provided long URLs
+- Rate limiting to prevent abuse (10 requests per minute per IP)
 
 ## Endpoints
 
@@ -29,6 +30,7 @@ A simple Django REST Framework-based URL shortener API that allows users to shor
   - `201 Created`: When a new short URL is created
   - `200 OK`: When the URL already exists
   - `400 Bad Request`: If the URL is invalid or missing
+  - `429 Too Many Requests`: If the rate limit is exceeded
 
 ### 2. Redirect to Long URL
 - **URL:** `/<short_code>`
@@ -90,3 +92,23 @@ python manage.py test
 
 - **Redirect:**
   Visit `https://your-domain.com/abc123` in your browser.
+
+## Rate Limiting
+
+- Each IP is limited to **10 requests per minute** for URL shortening.
+- If exceeded, the API returns:
+  ```json
+  {
+    "detail": "Request was throttled. Expected available in 60 seconds."
+  }
+  ```
+
+## Frontend Error Handling
+
+The HTML interface now handles errors, including rate limits. Users will see messages like:
+- "Please enter a URL."
+- "Invalid URL."
+- "Request was throttled. Expected available in 60 seconds."
+- "An unexpected error occurred."
+
+Make sure to refresh the browser to load the latest changes.
