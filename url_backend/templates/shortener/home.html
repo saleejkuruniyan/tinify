@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needoo Tinify</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #007bff; color: white; cursor: pointer; border: none; }
+        button:hover { background: #0056b3; }
+        .short-url { margin-top: 15px; background: #e9ecef; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Needoo Tinify</h2>
+        <input type="text" id="long_url" placeholder="Enter your long URL here" />
+        <button onclick="shortenURL()">Shorten URL</button>
+        <div class="short-url" id="result"></div>
+    </div>
+
+    <script>
+        function shortenURL() {
+            const longUrl = document.getElementById("long_url").value;
+            const resultDiv = document.getElementById("result");
+
+            if (!longUrl) {
+                resultDiv.innerHTML = "<p style='color:red;'>Please enter a URL.</p>";
+                return;
+            }
+
+            fetch("/shorten/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ long_url: longUrl })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.short_url) {
+                    resultDiv.innerHTML = `<p>Short URL: <a href="${data.short_url}" target="_blank">${data.short_url}</a></p>`;
+                } else if (data.error) {
+                    resultDiv.innerHTML = `<p style='color:red;'>${data.error}</p>`;
+                }
+            })
+            .catch(() => {
+                resultDiv.innerHTML = "<p style='color:red;'>An error occurred. Please try again.</p>";
+            });
+        }
+    </script>
+</body>
+</html>

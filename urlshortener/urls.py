@@ -17,10 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from url_backend.views import ShortenURLView, RedirectURLView
+from url_backend.views import ShortenURLAPIView, URLRedirectAPIView, home
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('shorten/', ShortenURLView.as_view(), name='shorten_url'),
-    path('<str:short_code>', RedirectURLView.as_view(), name='redirect_url'),
+    path('', home, name='home'),
+    path('shorten/', ShortenURLAPIView.as_view(), name='shorten_url'),
+    path('<str:short_code>', URLRedirectAPIView.as_view(), name='redirect_url'),
 ]
