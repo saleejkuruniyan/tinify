@@ -85,23 +85,8 @@ python manage.py test
   ```bash
   curl -X POST -H "Content-Type: application/json" \
        -d '{"long_url": "https://www.example.com"}' \
-       http://localhost:8000/shorten/
+       https://your-domain.com/shorten/
   ```
 
 - **Redirect:**
-  Visit `http://localhost:8000/abc123` in your browser.
-
-## URL Configuration
-
-```python
-from django.urls import path
-from .views import home, ShortenURLAPIView, URLRedirectAPIView
-
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path('', home, name='home'),
-    path('shorten/', ShortenURLAPIView.as_view(), name='shorten_url'),
-    path('<str:short_code>', URLRedirectAPIView.as_view(), name='redirect_url'),
-]
-```
-
+  Visit `https://your-domain.com/abc123` in your browser.
