@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from .models import URL
 
@@ -35,3 +35,22 @@ class URLShortenerAPITest(TestCase):
         response = self.client.get("/nonexistent/")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn('error', response.data)
+
+
+class RateLimitingTestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.shorten_url = reverse('shorten_url')
+        self.long_url = "https://www.example.com"
+
+    def test_rate_limiting(self):
+        # Send 10 successful requests
+        for _ in range(10):
+            response = self.client.post(self.shorten_url, {"long_url": self.long_url}, format='json')
+            self.assertNotEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+
+        # 11th request should be rate-limited
+        response = self.client.post(self.shorten_url, {"long_url": self.long_url}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+        self.assertIn('detail', response.data)
+        self.assertEqual(response.data['detail'], 'Request was throttled. Expected available in 60 seconds.')
