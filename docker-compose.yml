@@ -2,9 +2,7 @@ version: "3.8"
 
 services:
   django_app:
-    build:
-      context: .
-    image: django_app
+    image: saleejkuruniyan/tinify:latest
     container_name: "django_cont"
     ports:
       - "8000:8000"
