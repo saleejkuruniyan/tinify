@@ -26,15 +26,8 @@ pipeline{
         }
         stage("Push to DockerHub"){
             steps{
-                withCredentials([usernamePassword(
-                    credentialsId:"dockerHubCred",
-                    passwordVariable: "dockerHubPass",
-                    usernameVariable: "dockerHubUser"
-                    )]){
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                    sh "docker image tag tinify ${env.dockerHubUser}/tinify"
-                    sh "docker push ${env.dockerHubUser}/tinify:latest"
-                    
+                script{
+                    docker_push("dockerHubCred","tinify")
                 }
             }
         }
