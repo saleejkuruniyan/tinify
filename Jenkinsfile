@@ -1,18 +1,25 @@
+@Library("Shared") _
 pipeline{
     agent {label "dev"};
     stages{
-        stage("Clone"){
+        stage("Clone Code"){
             steps{
-                git url: "https://github.com/saleejkuruniyan/tinify.git", branch: "staging"
-                
+                script{
+                   clone("https://github.com/saleejkuruniyan/tinify.git", "staging")
+               }
             }
         }
-        stage("Build"){
+        stage("Trivy File System Scan"){
+            steps{
+                sh "trivy fs . -o results.json"
+            }
+        }
+        stage("Docker Build"){
             steps{
                 sh "docker build -t tinify ."
             }
         }
-        stage("Test"){
+        stage("Test Code"){
             steps{
                 echo "Test completed"
             }
@@ -31,7 +38,7 @@ pipeline{
                 }
             }
         }
-        stage("Deploy"){
+        stage("Deploy to Server"){
             steps{
                 sh "docker compose up -d --build"
             }
