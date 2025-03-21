@@ -20,9 +20,12 @@ spec:
       - name: tinify
         image: saleejkuruniyan/tinify:latest
         imagePullPolicy: Always
-        command: ["./manage.py", "migrate"] 
-        command: ["./manage.py", "collectstatic", "--noinput"]
-        command: ["gunicorn", "urlshortener.wsgi", "--bind", "0.0.0.0:8000"]
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            ./manage.py migrate &&
+            ./manage.py collectstatic --noinput &&
+            gunicorn urlshortener.wsgi --bind 0.0.0.0:8000
         ports:
         - containerPort: 8000
         resources:
