@@ -19,6 +19,7 @@ spec:
       containers:
       - name: tinify
         image: saleejkuruniyan/tinify:latest
+        imagePullPolicy: Always
         command: ["./manage.py", "migrate"] 
         command: ["./manage.py", "collectstatic", "--noinput"]
         command: ["gunicorn", "urlshortener.wsgi", "--bind", "0.0.0.0:8000"]
@@ -53,6 +54,6 @@ spec:
               name: tinify-secrets
               key: DB_PASSWORD
         - name: DB_HOST
-          value: mysql-service
+          value: mysql
         - name: DB_PORT
           value: "3306"
