@@ -19,15 +19,18 @@ spec:
       containers:
       - name: tinify
         image: saleejkuruniyan/tinify:latest
+        command: ["./manage.py", "migrate"] 
+        command: ["./manage.py", "collectstatic", "--noinput"]
+        command: ["gunicorn", "urlshortener.wsgi", "--bind", "0.0.0.0:8000"]
         ports:
         - containerPort: 8000
-        # resources:
-        #   requests:
-        #     memory: "512Mi"
-        #     cpu: "500m"
-        #   limits:
-        #     memory: "1024Mi"
-        #     cpu: "800m"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1024Mi"
+            cpu: "800m"
         env:
         - name: DOMAIN
           valueFrom:
@@ -53,4 +56,3 @@ spec:
           value: mysql-service
         - name: DB_PORT
           value: "3306"
-          
