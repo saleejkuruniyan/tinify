@@ -1,0 +1,58 @@
+stages:
+    - trivy_scan
+    - build
+    - test
+    - push_to_dockerhub
+    - deploy
+
+variables:
+    DEPLOY_ENV: "dev"
+    GUTLAB_USER_KEY: "secret"
+
+before_script:
+  - git config --global --add safe.directory "$CI_PROJECT_DIR"
+
+trivy_job:
+    stage: trivy_scan
+    script:
+        - echo "Trivy Scan started"
+        - mkdir -p logs
+        - trivy fs . -o logs/results.json
+    artifacts:
+        paths:
+            - logs/
+        expire_in: 1 week
+    tags:
+        - dev
+
+build_job:
+    stage: build
+    script:
+        - echo "The $CI_PROJECT_NAME is being build"
+        - docker build -t $DOCKERHUB_USER/tinify:latest .
+    tags:
+        - dev
+
+test_job:
+    stage: test
+    script:
+        - echo "This is a test job by $CI_COMMIT_AUTHOR"
+    tags:
+        - dev
+
+push_job:
+    stage: push_to_dockerhub
+    script:
+        - echo "Build is being pushed to dockerhub by $DOCKERHUB_USER"
+        - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
+        - docker push $DOCKERHUB_USER/tinify:latest
+    tags:
+        - dev
+
+deploy_job:
+    stage: deploy
+    script:
+        - echo "This is deployment to $DEPLOY_ENV environment"
+        - docker compose up -d
+    tags:
+        - dev
