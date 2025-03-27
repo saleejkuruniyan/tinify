@@ -20,7 +20,13 @@ if [[ -z "$ipv4_address" ]]; then
 fi
 
 # Path to the .env file
-file_to_find=".env.docker"
+file_to_find="./.env.docker"
+
+# Check if the file exists
+if [ ! -f "$file_to_find" ]; then
+    echo "ERROR: File '$file_to_find' not found."
+    exit 1  # Exit with an error code
+fi
 
 # Check the current FRONTEND_URL in the .env file
 current_url=$(sed -n "4p" $file_to_find)
