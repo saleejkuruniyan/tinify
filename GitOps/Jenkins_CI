@@ -1,0 +1,107 @@
+@Library('Shared') _
+pipeline {
+    agent {label 'Node'}
+    
+    environment{
+        SONAR_HOME = tool "Sonar"
+    }
+    
+    parameters {
+        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Setting docker image for latest push')
+    }
+    
+    stages {
+        stage("Validate Parameters") {
+            steps {
+                script {
+                    if (params.DOCKER_TAG == '') {
+                        error("DOCKER_TAG must be provided.")
+                    }
+                }
+            }
+        }
+        stage("Workspace cleanup"){
+            steps{
+                script{
+                    cleanWs()
+                }
+            }
+        }
+        
+        stage('Git: Code Checkout') {
+            steps {
+                script{
+                    code_checkout("https://github.com/saleejkuruniyan/tinify.git","staging")
+                }
+            }
+        }
+        
+        stage("Trivy: Filesystem scan"){
+            steps{
+                script{
+                    trivy_scan()
+                }
+            }
+        }
+
+        stage("OWASP: Dependency check"){
+            steps{
+                script{
+                    owasp_dependency()
+                }
+            }
+        }
+        
+        stage("SonarQube: Code Analysis"){
+            steps{
+                script{
+                    sonarqube_analysis("Sonar","tinify","tinify")
+                }
+            }
+        }
+        
+        stage("SonarQube: Code Quality Gates"){
+            steps{
+                script{
+                    sonarqube_code_quality()
+                }
+            }
+        }
+        
+        stage('Environment variable setup') {
+            steps {
+                script{
+                    dir("Automations"){
+                        sh "bash update.sh"
+                    }
+                }
+            }
+        }
+        
+        stage("Docker: Build Images"){
+            steps{
+                script{
+                    dir('backend'){
+                        docker_build("tinify","${params.DOCKER_TAG}","saleejkuruniyan")
+                    }
+                }
+            }
+        }
+        
+        stage("Docker: Push to DockerHub"){
+            steps{
+                script{
+                    docker_push("tinify","${params.DOCKER_TAG}","saleejkuruniyan") 
+                }
+            }
+        }
+    }
+    post{
+        success{
+            archiveArtifacts artifacts: '*.xml', followSymlinks: false
+            build job: "Tinify-CD", parameters: [
+                string(name: 'DOCKER_TAG', value: "${params.DOCKER_TAG}"),
+            ]
+        }
+    }
+}
