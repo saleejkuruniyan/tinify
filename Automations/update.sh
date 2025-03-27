@@ -20,7 +20,7 @@ if [[ -z "$ipv4_address" ]]; then
 fi
 
 # Path to the .env file
-file_to_find="./.env.docker"
+file_to_find="../.env.docker"
 
 # Check if the file exists
 if [ ! -f "$file_to_find" ]; then

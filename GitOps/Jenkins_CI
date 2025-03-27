@@ -81,9 +81,7 @@ pipeline {
         stage("Docker: Build Images"){
             steps{
                 script{
-                    dir('backend'){
-                        docker_build("tinify","${params.DOCKER_TAG}","saleejkuruniyan")
-                    }
+                    docker_build("tinify","${params.DOCKER_TAG}","saleejkuruniyan")
                 }
             }
         }
