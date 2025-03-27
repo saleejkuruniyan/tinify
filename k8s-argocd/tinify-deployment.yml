@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: tinify
-        image: saleejkuruniyan/tinify-beta:1.4
+        image: saleejkuruniyan/tinify-beta:1.6
         imagePullPolicy: Always
         command: ["/bin/sh", "-c"]
         args:
