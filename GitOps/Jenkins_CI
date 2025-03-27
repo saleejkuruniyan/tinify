@@ -4,6 +4,8 @@ pipeline {
     
     environment{
         SONAR_HOME = tool "Sonar"
+        RESOURCE_GROUP = "WanderlustResourceGroup"
+        CLUSTER_NAME = "wanderlust"
     }
     
     parameters {
