@@ -35,17 +35,10 @@ spec:
           limits:
             memory: "1024Mi"
             cpu: "800m"
+        envFrom:
+        - configMapRef:
+          name: tinify-config
         env:
-        - name: DB_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: tinify-config
-              key: DB_NAME
-        - name: DB_USER
-          valueFrom:
-            configMapKeyRef:
-              name: tinify-config
-              key: DB_USER
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
