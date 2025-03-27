@@ -20,7 +20,7 @@ if [[ -z "$ipv4_address" ]]; then
 fi
 
 # Path to the .env file
-file_to_find="../backend/.env.docker"
+file_to_find=".env.docker"
 
 # Check the current FRONTEND_URL in the .env file
 current_url=$(sed -n "4p" $file_to_find)
