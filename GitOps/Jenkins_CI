@@ -81,7 +81,7 @@ pipeline {
         stage("Docker: Build Images"){
             steps{
                 script{
-                    docker_build("tinify","${params.DOCKER_TAG}","saleejkuruniyan")
+                    docker_build("tinify-beta","${params.DOCKER_TAG}","saleejkuruniyan")
                 }
             }
         }
@@ -89,7 +89,7 @@ pipeline {
         stage("Docker: Push to DockerHub"){
             steps{
                 script{
-                    docker_push("tinify","${params.DOCKER_TAG}","saleejkuruniyan") 
+                    docker_push("tinify-beta","${params.DOCKER_TAG}","saleejkuruniyan") 
                 }
             }
         }

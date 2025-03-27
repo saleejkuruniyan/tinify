@@ -35,9 +35,9 @@ pipeline {
         stage("Update: Kubernetes manifests"){
             steps{
                 script{
-                    dir('k8s'){
+                    dir('k8s-argocd'){
                         sh """
-                            sed -i -e s/tinify.*/tinify:${params.DOCKER_TAG}/g tinify-deployment.yml
+                            sed -i -e s/tinify-beta.*/tinify-beta:${params.DOCKER_TAG}/g tinify-deployment.yml
                         """
                     }
                 }
