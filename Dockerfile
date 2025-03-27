@@ -39,6 +39,8 @@ COPY --from=builder /install /usr/local
 # Copy application code
 COPY . /app
 
+COPY .env.docker .env
+
 # Expose application port
 EXPOSE 8000
 

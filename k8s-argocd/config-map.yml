@@ -6,5 +6,4 @@ metadata:
 data:
   DB_NAME: tinify
   DB_USER: root
-  DOMAIN: http://localhost:8000
   MYSQL_DATABASE: tinify
