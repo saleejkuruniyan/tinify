@@ -72,7 +72,7 @@ pipeline {
             steps {
                 script{
                     dir("Automations"){
-                        sh "bash update.sh"
+                        sh "bash update.sh '${RESOURCE_GROUP}' '${CLUSTER_NAME}'"
                     }
                 }
             }

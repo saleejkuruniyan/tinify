@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define your AKS cluster and resource group
-RESOURCE_GROUP="WanderlustResourceGroup"
-CLUSTER_NAME="wanderlust"
+RESOURCE_GROUP=$1
+CLUSTER_NAME=$2
 
 NODE_RG=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query nodeResourceGroup -o tsv)
 
@@ -32,9 +32,9 @@ fi
 current_url=$(sed -n "4p" $file_to_find)
 
 # Update the .env file if the IP address has changed
-if [[ "$current_url" != "DOMAIN=\"http://${ipv4_address}:8000\"" ]]; then
+if [[ "$current_url" != "DOMAIN=\"http://${ipv4_address}:30001\"" ]]; then
     if [ -f $file_to_find ]; then
-        sed -i -e "s|DOMAIN.*|DOMAIN=\"http://${ipv4_address}:8000\"|g" $file_to_find
+        sed -i -e "s|DOMAIN.*|DOMAIN=\"http://${ipv4_address}:30001\"|g" $file_to_find
     else
         echo "ERROR: File not found."
     fi
