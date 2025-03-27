@@ -1,0 +1,15 @@
+kind: VerticalPodAutoscaler
+apiVersion: autoscaling.k8s.io/v1
+
+metadata:
+  name: tinify-vpa
+  namespace: tinify
+
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tinify-deployment
+
+  updatePolicy:
+    updateMode: "Auto"
