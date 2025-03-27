@@ -36,8 +36,8 @@ spec:
             memory: "1024Mi"
             cpu: "800m"
         envFrom:
-        - configMapRef:
-          name: tinify-config
+          - configMapRef:
+              name: tinify-config
         env:
         - name: DB_PASSWORD
           valueFrom:
