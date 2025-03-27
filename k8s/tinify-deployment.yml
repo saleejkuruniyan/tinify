@@ -1,24 +1,24 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: tinify:1.0
-  namespace: tinify:1.0
+  name: tinify-deployment
+  namespace: tinify
   labels:
-    app: tinify:1.0
+    app: tinify
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tinify:1.0
+      app: tinify
   template:
     metadata:
-      name: tinify:1.0
+      name: tinify
       labels:
-        app: tinify:1.0
+        app: tinify
     spec:
       containers:
-      - name: tinify:1.0
-        image: saleejkuruniyan/tinify:1.0
+      - name: tinify
+        image: saleejkuruniyan/tinify:latest
         imagePullPolicy: Always
         command: ["/bin/sh", "-c"]
         args:
@@ -39,22 +39,22 @@ spec:
         - name: DOMAIN
           valueFrom:
             configMapKeyRef:
-              name: tinify:1.0
+              name: tinify-config
               key: DOMAIN
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:
-              name: tinify:1.0
+              name: tinify-config
               key: DB_NAME
         - name: DB_USER
           valueFrom:
             configMapKeyRef:
-              name: tinify:1.0
+              name: tinify-config
               key: DB_USER
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: tinify:1.0
+              name: tinify-secrets
               key: DB_PASSWORD
         - name: DB_HOST
           value: mysql
